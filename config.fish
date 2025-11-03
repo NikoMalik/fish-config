@@ -3,7 +3,26 @@
 # -------------------------------
 # PATH
 # -------------------------------
-set -gx PATH $HOME/.cargo/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $HOME/go/bin /bin /usr/local/sbin /usr/local/bin /usr/bin /opt/bin /usr/lib/llvm/20/bin /opt/cuda/bin /usr/bin/zig /home/niko/src/zls/zig-out/bin/zls /home/niko/.local/bin /home/niko/.spicetify $PATH
+# set -gx PATH $HOME/.cargo/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/default/bin $HOME/go/bin /bin /usr/local/sbin /usr/local/bin /usr/bin /opt/bin /usr/lib/llvm/20/bin /opt/cuda/bin  /home/niko/src/zls/zig-out/bin/ /home/niko/.local/bin /home/niko/.spicetify $PATH
+
+
+
+
+set -gx PATH \
+    $HOME/.cargo/bin \
+    $HOME/.nix-profile/bin \
+    /nix/var/nix/profiles/default/bin \
+    $HOME/go/bin \
+    /bin \
+    /usr/local/sbin \
+    /usr/local/bin \
+    /usr/bin \
+    /opt/bin \
+    /usr/lib/llvm/20/bin \
+    /opt/cuda/bin \
+    /home/niko/.local/bin \
+    /home/niko/.spicetify
+
 
 # -------------------------------
 # ENVS
@@ -11,16 +30,14 @@ set -gx PATH $HOME/.cargo/bin $HOME/.nix-profile/bin /nix/var/nix/profiles/defau
 set -gx GOCACHE $HOME/.cache/go-build
 set -gx GOPATH $HOME/go
 set -gx GOBIN $GOPATH/bin
-set -gx QT_QPA_PLATFORM wayland
-set -gx CLUTTER_BACKEND wayland
-set -gx XDG_SESSION_TYPE wayland
-set -gx WLR_NO_HARDWARE_CURSORS 1
-set -gx MOZ_ENABLE_WAYLAND 1
 set -gx QT_QPA_PLATFORMTHEME gtk3
 set -gx GDK_BACKEND wayland
 set -gx EDITOR nvim
 set -gx SAL_USE_VCLPLUGIN gtk3
 set -gx NVM_DIR $HOME/.nvm
+
+
+
 
 # -------------------------------
 # ALIAS
@@ -41,6 +58,29 @@ alias size-folder "du -sh"
 alias need-for "equery h"
 alias equery_versions "equery list -po"
 alias gentoo-gc "sudo eclean-dist --deep"
+alias update "sudo emerge -avtDNUu @world"
+alias grub-update "sudo grub-mkconfig -o /boot/grub/grub.cfg"
+function gentoo-package-size
+    qsize -v --nocolor | awk '{
+        for (i=1; i<=NF; i++) {
+            if ($i ~ /^[0-9.]+[KMG]$/) {
+                size=$i
+                unit=substr(size, length(size))
+                val=substr(size, 1, length(size)-1)
+                if (unit=="K") val/=1024
+                else if (unit=="G") val*=1024
+                sum+=val
+            }
+        }
+    }
+    END {printf "Total size: %.2f MB (%.2f GB)\n", sum, sum/1024}'
+end
+
+alias cleanup "sudo rm -rf /var/tmp/portage/*
+sudo rm -rf /var/cache/distfiles/*
+sudo rm -rf /var/cache/binpkgs/*
+"
+
 
 # Docker
 alias dockerd-start "sudo rc-service docker start"
@@ -76,6 +116,7 @@ alias image "qimgv"
 alias calendar "calcurse"
 alias firefox "/usr/bin/firefox-bin"
 alias ls "lsr"
+
 
 # -------------------------------
 # NVM (Node Version Manager)

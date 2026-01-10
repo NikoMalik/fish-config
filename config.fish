@@ -31,33 +31,41 @@ set -gx GDK_BACKEND wayland
 set -gx EDITOR nvim
 set -gx SAL_USE_VCLPLUGIN gtk3
 set -gx NVM_DIR $HOME/.nvm
+set -gx GOTELEMETRY off
+
 
 # -------------------------------
 # ALIAS
 # -------------------------------
-alias gs "git status"
-alias gl "git log --oneline --graph --decorate"
-alias ga "git add ."
-alias gc "git commit"
-alias gcb "git checkout -b"
-alias gco "git checkout"
-alias gb "git branch"
-alias gundo "git reset --soft HEAD~1"
-alias gbr "git branch -r"
-alias gpl "git pull"
-alias doom "$HOME/.config/emacs/bin/doom"
-alias disk "sudo smartctl -a"
-alias disk-health "sudo smartctl -aH"
-alias size-folder "du -sh"
-alias need-for "equery h"
-alias equery_versions "equery list -po"
-alias gentoo-gc "sudo eclean-dist --deep"
-alias update "sudo emerge -avtDNUu @world"
-alias grub-update "sudo grub-mkconfig -o /boot/grub/grub.cfg"
-alias git-sync "git fetch origin && git rebase origin/main"
-alias git-log-reverse "git log --oneline --reverse"
-alias git-revert-commit "git revert -n"
-alias gt-substatus "git submodule status"
+
+function gs      ; git status $argv               ; end
+function gl      ; git log --oneline --graph --decorate $argv ; end
+function ga      ; git add . $argv                 ; end
+function gc      ; git commit $argv                ; end
+function gcb     ; git checkout -b $argv           ; end
+function gco     ; git checkout $argv             ; end
+function gb      ; git branch $argv                ; end
+function gundo   ; git reset --soft HEAD~1 $argv   ; end
+function gbr     ; git branch -r $argv            ; end
+function gpl     ; git pull $argv                 ; end
+function git-sync   ; git fetch origin && git rebase origin/main $argv ; end
+function git-merge  ; git fetch origin && git merge origin/main $argv ; end
+function git-log-reverse ; git log --oneline --reverse $argv ; end
+function git-revert-commit ; git revert -n $argv   ; end
+function gt-substatus ; git submodule status $argv ; end
+function disk         ; sudo smartctl -a $argv         ; end
+function disk-health  ; sudo smartctl -aH $argv        ; end
+function size-folder  ; du -sh $argv                   ; end
+function cleanup ;
+    sudo rm -rf /var/tmp/portage/*
+    sudo rm -rf /var/cache/distfiles/*
+    sudo rm -rf /var/cache/binpkgs/*
+end
+function need-for       ; equery h $argv               ; end
+function equery_versions ; equery list -po $argv       ; end
+function gentoo-gc      ; sudo eclean-dist --deep $argv ; end
+function update         ; sudo emerge -avtDNUu @world $argv ; end
+function grub-update    ; sudo grub-mkconfig -o /boot/grub/grub.cfg $argv ; end
 function gentoo-package-size
     qsize -v --nocolor | awk '{
         for (i=1; i<=NF; i++) {
@@ -74,57 +82,43 @@ function gentoo-package-size
     END {printf "Total size: %.2f MB (%.2f GB)\n", sum, sum/1024}'
 end
 
-alias cleanup "sudo rm -rf /var/tmp/portage/*
-sudo rm -rf /var/cache/distfiles/*
-sudo rm -rf /var/cache/binpkgs/*
-"
 
 # Docker
-alias dockerd-start "sudo rc-service docker start"
-alias docker-start "sudo rc-service docker start"
-alias dockerd-stop "sudo rc-service docker stop"
-alias dockerd-restart "sudo rc-service docker restart"
-alias dps "docker ps"
-alias dpsa "docker ps -a"
-alias dimg "docker images"
-alias drm "docker rm -f"
-alias drmi "docker rmi"
-alias dexec "docker exec -it"
-alias drm "docker rm"
-alias drstop "docker stop"
-alias dlogs "docker logs -f"
+function dockerd-start    ; sudo rc-service docker start $argv     ; end
+function dockerd-stop     ; sudo rc-service docker stop $argv      ; end
+function dockerd-restart  ; sudo rc-service docker restart $argv   ; end
+
+function dps   ; docker ps $argv      ; end
+function dpsa  ; docker ps -a $argv   ; end
+function dimg  ; docker images $argv  ; end
+function drm   ; docker rm -f $argv   ; end  # оставил с -f — чаще нужен
+function drmi  ; docker rmi $argv     ; end
+function dexec ; docker exec -it $argv ; end
+function drstop ; docker stop $argv   ; end
+function dlogs  ; docker logs -f $argv ; end
 
 # Gentoo helpers
-alias emerge-search "equery list"
-alias emerge-info "equery uses"
-alias emerge-files "equery files"
-alias emerge-deps "equery depgraph"
-alias etc-update "sudo etc-update"
-alias eqd "equery depends"
-alias equ "equery uses"
-alias eqg "equery g"
-alias epkg "emerge -pv"
-alias esync "emerge --sync"
-alias emc "emerge --depclean"
-alias emn "emerge -avuDN @world"
-alias emr "emerge --deselect"
-alias eixi "eix --installed"
-alias image qimgv
+function emerge-search  ; equery list $argv           ; end
+function emerge-info    ; equery uses $argv            ; end
+function emerge-files   ; equery files $argv           ; end
+function emerge-deps    ; equery depgraph $argv        ; end
+function etc-update     ; sudo etc-update $argv        ; end
+function eqd            ; equery depends $argv         ; end
+function equ            ; equery uses $argv            ; end
+function eqg            ; equery g $argv               ; end
+function epkg           ; emerge -pv $argv             ; end
+function esync          ; emerge --sync $argv          ; end
+function emc            ; emerge --depclean $argv      ; end
+function emn            ; emerge -avuDN @world $argv   ; end
+function emr            ; emerge --deselect $argv      ; end
+function eixi           ; eix --installed $argv        ; end
+function image    ; qimgv $argv      ; end
 
 # Misc
-alias calendar calcurse
-alias firefox /usr/bin/firefox-bin
-alias ls lsr
+function calendar ; calcurse $argv   ; end
+function firefox  ; /usr/bin/firefox-bin $argv ; end
+function ls       ; lsr $argv        ; end
 
-# -------------------------------
-# NVM (Node Version Manager)
-# -------------------------------
-if test -s "$NVM_DIR/nvm.sh"
-    source "$NVM_DIR/nvm.sh"
-end
-if test -s "$NVM_DIR/bash_completion"
-    source "$NVM_DIR/bash_completion"
-end
 
 # -------------------------------
 # Fish greeting
